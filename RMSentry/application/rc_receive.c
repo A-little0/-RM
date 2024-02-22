@@ -40,6 +40,8 @@ void RC_Receive_Init(void)
 	/*使yaw,pitch刚开始处于机械中值*/
    //rc_user.yaw=YAW_MEDIAN;
 	 rc_user.pitch=PITCH_MEDIAN;
+	/*rc_status*/
+	rc_user.status=0;
 }
 /**
   * @func			void IDLE_RC_Handler(void)
@@ -50,7 +52,7 @@ void RC_Receive_Init(void)
   */
 void IDLE_RC_Handler(void)
 {
-	
+	rc_user.status=1;
 	uint32_t Data_lave,Data_exist; 
 	if((__HAL_UART_GET_FLAG(&huart3,UART_FLAG_IDLE)!= RESET))//判断串口dma接收是否处于空闲状态  
 	{
@@ -66,13 +68,13 @@ void IDLE_RC_Handler(void)
 		{
 			RC_Receive();//接收成功后，处理相应接收数据
 		}
-		else if(Data_exist == 18)//未接收到数据
+		else
 		{
-			rc_control_mode=RC_SIGNAL_UNLINK;
 			RC_Receive_Init();
 		}
 		HAL_UART_Receive_DMA(&huart3,sbus_rx_buffer,18);//重新启动dma接收
 	}
+	//rc_user.status=0;
 }
 /**
   * @func			void RC_Receive(void)
@@ -104,17 +106,17 @@ void RC_Receive(void)
 			case 1:
 				rc_control_mode=CHASSIS_NORMAL_MODE;
 				/*速度使用绝对值*/
-				rc_user.x     = -( RC_Ctl.rc.ch3-1024 ) * RC_sent_X;//通道2控制左右
+				rc_user.x     =  ( RC_Ctl.rc.ch3-1024 ) * RC_sent_X;//通道2控制左右
 				rc_user.y     =  ( RC_Ctl.rc.ch2-1024 ) * RC_sent_Y;//通道3控制前后
-				rc_user.z     =  ( RC_Ctl.rc.roller -1024) * RC_sent_rotate;//通道roller控制绕圆转动
+				rc_user.z     = -( RC_Ctl.rc.roller -1024) * RC_sent_rotate;//通道roller控制绕圆转动
 			    /*角度使用增量*/
-			    rc_user.yaw  =   ( RC_Ctl.rc.ch0-1024 ) +YAW_MEDIAN;//通道0控制云台yaw旋转
+			    rc_user.yaw  =   -( RC_Ctl.rc.ch0-1024 ) +YAW_MEDIAN;//通道0控制云台yaw旋转
 			    rc_user.pitch += ( RC_Ctl.rc.ch1-1024 ) * RC_sent_pitch;//通道1控制云台pitch旋转
 				break;
 			case 3:
 				rc_control_mode=CHASSIS_FOLLOW_GIMBAL_MODE;
 				/*速度使用绝对值*/
-				rc_user.x     = -( RC_Ctl.rc.ch3-1024 ) * RC_sent_X;//通道2控制左右
+				rc_user.x     =  ( RC_Ctl.rc.ch3-1024 ) * RC_sent_X;//通道2控制左右
 				rc_user.y     =  ( RC_Ctl.rc.ch2-1024 ) * RC_sent_Y;//通道3控制前后
 			    /*角度使用增量*/
 			    rc_user.yaw   += ( RC_Ctl.rc.roller-1024 )*RC_sent_yaw;//通道roller控制云台yaw旋转
@@ -127,7 +129,7 @@ void RC_Receive(void)
 				rc_user.y     =  ( RC_Ctl.rc.ch2-1024 ) * RC_sent_Y;//通道3控制前后
 			    rc_user.z     =  ( RC_Ctl.rc.roller -1024) * RC_sent_rotate;//通道roller控制绕圆转动
 			    /*角度使用增量*/
-			    rc_user.yaw   += ( RC_Ctl.rc.ch0-1024 )*RC_sent_yaw;//通道0控制云台yaw旋转
+			    rc_user.yaw   -= ( RC_Ctl.rc.ch0-1024 )*RC_sent_yaw;//通道0控制云台yaw旋转
 			    rc_user.pitch += ( RC_Ctl.rc.ch1-1024 )*RC_sent_pitch;//通道1控制云台pitch旋转
 				break;
 			default://未接收到遥控器的值

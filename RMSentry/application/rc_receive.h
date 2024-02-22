@@ -67,6 +67,7 @@ typedef struct
 	  signed short yaw;
 //	unsigned char s1;
 //	unsigned char s2;
+	signed short status;
 }RC_USER;
 
 extern RC_Ctl_t RC_Ctl;   

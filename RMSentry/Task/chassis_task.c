@@ -116,7 +116,7 @@ void Chassis_WheatWheel_Solution(int16_t chassisXvector,int16_t chassisYvectory,
   */
 void ChassisGyro_Task(int16_t worldXvector,int16_t worldYvector,int rotateK,float c_angle)
 {
-	/*角度转换为绝对编码器值*/
+	/*绝对编码器值转为角度*/
 	chassis_vectors.angle_cmtw=c_angle*360/8191;
 	/*cos,sin计算*/
 	arm_sin_cos_f32(chassis_vectors.angle_cmtw,&chassis_vectors.sin,&chassis_vectors.cos);

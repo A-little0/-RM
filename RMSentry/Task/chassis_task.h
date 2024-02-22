@@ -21,7 +21,7 @@
 #include "3508_driver.h"
 #include "arm_math.h"
 /*小陀螺旋转速度*/
-#define CHASSIS_GYRO_ROTATE_SPEED 500
+#define CHASSIS_GYRO_ROTATE_SPEED 0
 /*底盘pid相关宏*/
 #define CHASSIS_ANGLEPID_KP 1.5f 
 #define CHASSIS_ANGLEPID_KI 0.0f 

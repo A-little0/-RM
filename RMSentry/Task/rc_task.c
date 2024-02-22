@@ -49,6 +49,14 @@ void Demo(void)
 	int16_t g_compensation=0;
 	static int mode=0;
 	mode=RC_Ctl.rc.s1;
+//	if(rc_user.status == 1 )
+//	{
+//		rc_user.status=0;
+//	}
+//	else
+//	{
+//		mode=RC_SIGNAL_UNLINK;
+//	}
 	switch(mode)
 	{
 		case CHASSIS_NORMAL_MODE:
@@ -61,9 +69,12 @@ void Demo(void)
 			break;
 		case CHASSIS_FOLLOW_GIMBAL_MODE:
 			M6020_GetBasicData(&yaw_gimbal_motor);//获取数据
-			if(yaw_key==0){Get_ReferenceMedianAngle(&JY901_data,&yaw_gimbal_motor);yaw_key=1;} 
+			if(yaw_key==0){
+				Get_ReferenceMedianAngle(&JY901_data,&yaw_gimbal_motor);yaw_key=1;
+				rc_user.yaw=0;
+			} 
 			target_angle_test=rc_user.yaw;
-			yaw_output=Yaw_Gimbal_Task2(JY901_data.angle.angle[2],(yaw_beganangle+rc_user.yaw));
+			yaw_output=Yaw_Gimbal_Task2(JY901_data.angle.angle[2],(yaw_beganangle+rc_user.yaw)); 
 			pitch_output=Pitch_Gimbal_Task(rc_user.pitch);
 			g_compensation=GravityCompensation(&pitch_gimbal_motor);
 			Shoot_Control(&trigger1_output,&trigger2_output);
@@ -78,6 +89,7 @@ void Demo(void)
 				Get_ReferenceMedianAngle(&JY901_data,&yaw_gimbal_motor);
 				Update_ReferenceBeganeECD(&yaw_gimbal_motor);
 				yaw_key2=1;
+				rc_user.yaw=0;
 			} 
 			target_angle_test=rc_user.yaw;
 			yaw_output=Yaw_Gimbal_Task2(JY901_data.angle.angle[2],(yaw_beganangle+rc_user.yaw));
@@ -86,7 +98,7 @@ void Demo(void)
 			Shoot_Control(&trigger1_output,&trigger2_output);
 			CAN_cmd_gimbal(yaw_output, pitch_output+g_compensation, trigger1_output, trigger2_output);
 			
-			ChassisGyro_Task(rc_user.x,rc_user.y,1,yaw_beganecd+rc_user.yaw*8191/360-yaw_gimbal_motor.basic_data.ecd);//yaw_beganecd+rc_user.yaw*8191/360-yaw_gimbal_motor.basic_data.ecd
+			ChassisGyro_Task(rc_user.x,rc_user.y,1,YAW_MEDIAN-yaw_gimbal_motor.basic_data.ecd);//yaw_beganecd+rc_user.yaw*8191/360-yaw_gimbal_motor.basic_data.ecd//yaw_beganecd+rc_user.yaw*8191/360-yaw_gimbal_motor.basic_data.ecd)
 			break;
 		default:
 			Chassis_WheatWheel_Solution(0,0,0,0);
