@@ -1,0 +1,9 @@
+rmsentry\arm_sin_cos_f32.o: ..\Src\arm_sin_cos_f32.c
+rmsentry\arm_sin_cos_f32.o: D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\arm_common_tables.h
+rmsentry\arm_sin_cos_f32.o: D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\arm_math.h
+rmsentry\arm_sin_cos_f32.o: D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\core_cm4.h
+rmsentry\arm_sin_cos_f32.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+rmsentry\arm_sin_cos_f32.o: D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\cmsis_compiler.h
+rmsentry\arm_sin_cos_f32.o: D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\cmsis_armcc.h
+rmsentry\arm_sin_cos_f32.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+rmsentry\arm_sin_cos_f32.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
